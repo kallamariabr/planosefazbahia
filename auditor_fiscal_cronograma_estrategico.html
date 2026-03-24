@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEFAZ-BA | Auditor Fiscal — Cronograma Estratégico</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --border: #1e2a38;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6b;
+    --accent4: #c77dff;
+    --accent5: #ffd60a;
+    --text: #e8edf2;
+    --text2: #8899aa;
+    --text3: #4a5568;
+    --red: #ff4757;
+    --icms: #00e5ff;
+    --trib: #ff6b35;
+    --cont: #7fff6b;
+    --audit: #c77dff;
+    --const: #ffd60a;
+    --admin: #ff8fab;
+    --port: #90e0ef;
+    --stat: #ade8f4;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width:6px; } 
+  ::-webkit-scrollbar-track { background:var(--bg2); }
+  ::-webkit-scrollbar-thumb { background:var(--accent); border-radius:3px; }
+
+  /* HEADER */
+  .header { 
+    background:var(--bg2); 
+    border-bottom:1px solid var(--border); 
+    padding:0 24px;
+    position:sticky; top:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    height:56px;
+  }
+  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:14px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; }
+  .logo span { color:var(--text2); font-weight:400; }
+  .nav { display:flex; gap:4px; }
+  .nav-btn { 
+    background:none; border:none; cursor:pointer; 
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:500;
+    color:var(--text2); padding:6px 14px; border-radius:6px;
+    transition:all .2s; letter-spacing:.5px;
+  }
+  .nav-btn:hover, .nav-btn.active { background:var(--bg3); color:var(--accent); }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  .date-badge { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); }
+
+  /* MAIN */
+  .main { padding:24px; max-width:1400px; margin:0 auto; }
+
+  /* VIEWS */
+  .view { display:none; }
+  .view.active { display:block; }
+
+  /* DASHBOARD */
+  .dash-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  .kpi { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:12px; 
+    padding:16px 20px; position:relative; overflow:hidden;
+  }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .kpi.cyan::before { background:var(--accent); }
+  .kpi.orange::before { background:var(--accent2); }
+  .kpi.green::before { background:var(--accent3); }
+  .kpi.purple::before { background:var(--accent4); }
+  .kpi-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; font-family:'IBM Plex Mono',monospace; }
+  .kpi-value { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
+  .kpi-sub { font-size:11px; color:var(--text2); margin-top:4px; }
+
+  /* SECTION TITLES */
+  .section-title { 
+    font-family:'Syne',sans-serif; font-size:13px; font-weight:700; 
+    color:var(--text2); text-transform:uppercase; letter-spacing:2px; 
+    margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* PROGRESS BARS */
+  .progress-bar { background:var(--bg3); border-radius:4px; height:6px; overflow:hidden; }
+  .progress-fill { height:100%; border-radius:4px; transition:width 0.8s ease; }
+
+  /* DISCIPLINE CARDS */
+  .disc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+  .disc-card { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:10px; 
+    padding:14px 16px; cursor:pointer; transition:all .2s; 
+  }
+  .disc-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+  .disc-name { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; margin-bottom:8px; }
+  .disc-hours { font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; }
+  .disc-pct { font-size:11px; color:var(--text2); margin-bottom:10px; }
+  .disc-bar { margin-bottom:6px; }
+  .disc-questions { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; }
+
+  /* TWO COL */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:20px; }
+
+  /* CARDS */
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .card-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; margin-bottom:14px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; }
+
+  /* CALENDAR GRID */
+  .cal-header { display:grid; grid-template-columns:80px repeat(7,1fr); gap:4px; margin-bottom:8px; }
+  .cal-day-label { font-size:10px; color:var(--text3); text-align:center; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; padding:4px; }
+  .cal-row { display:grid; grid-template-columns:80px repeat(7,1fr); gap:4px; margin-bottom:4px; align-items:center; }
+  .cal-block-label { font-size:10px; color:var(--text2); font-family:'IBM Plex Mono',monospace; }
+  .cal-cell { 
+    border-radius:6px; padding:6px 4px; font-size:9px; line-height:1.3;
+    cursor:pointer; transition:all .15s; min-height:52px;
+    display:flex; flex-direction:column; justify-content:flex-start;
+    border:1px solid transparent;
+  }
+  .cal-cell:hover { transform:scale(1.05); border-color:rgba(255,255,255,.2); }
+  .cal-cell.icms { background:rgba(0,229,255,.12); color:#00e5ff; }
+  .cal-cell.trib { background:rgba(255,107,53,.12); color:#ff6b35; }
+  .cal-cell.cont { background:rgba(127,255,107,.12); color:#7fff6b; }
+  .cal-cell.audit { background:rgba(199,125,255,.12); color:#c77dff; }
+  .cal-cell.const { background:rgba(255,214,10,.12); color:#ffd60a; }
+  .cal-cell.admin { background:rgba(255,143,171,.12); color:#ff8fab; }
+  .cal-cell.port { background:rgba(144,224,239,.12); color:#90e0ef; }
+  .cal-cell.sim { background:rgba(255,71,87,.12); color:#ff4757; }
+  .cal-cell.rev { background:rgba(100,100,100,.15); color:#8899aa; }
+  .cal-cell.rest { background:rgba(20,30,40,.5); color:#3a4a5a; }
+  .cal-cell-disc { font-weight:700; font-size:9px; margin-bottom:2px; }
+  .cal-cell-topic { font-size:8px; opacity:.8; }
+  .cal-cell-type { font-size:8px; margin-top:2px; opacity:.6; font-family:'IBM Plex Mono',monospace; }
+
+  /* STUDY LOG */
+  .log-form { background:var(--bg3); border-radius:10px; padding:16px; margin-bottom:16px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:10px; align-items:end; }
+  .form-group { display:flex; flex-direction:column; gap:4px; }
+  .form-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; font-family:'IBM Plex Mono',monospace; }
+  .form-control { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:6px;
+    padding:8px 12px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif;
+    outline:none; transition:border-color .2s;
+  }
+  .form-control:focus { border-color:var(--accent); }
+  .form-control option { background:var(--bg2); }
+  .btn { 
+    background:var(--accent); color:#000; border:none; cursor:pointer;
+    padding:9px 18px; border-radius:6px; font-family:'Syne',sans-serif;
+    font-weight:700; font-size:12px; letter-spacing:1px; transition:all .2s;
+    white-space:nowrap;
+  }
+  .btn:hover { background:#00b8d4; transform:translateY(-1px); }
+  .btn.danger { background:var(--red); color:#fff; }
+  .btn.ghost { background:var(--bg3); color:var(--text2); border:1px solid var(--border); }
+  .btn.ghost:hover { border-color:var(--accent); color:var(--accent); background:var(--bg2); }
+
+  /* LOG TABLE */
+  .log-table { width:100%; border-collapse:collapse; }
+  .log-table th { 
+    font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px;
+    padding:8px 12px; text-align:left; border-bottom:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .log-table td { 
+    padding:10px 12px; font-size:13px; border-bottom:1px solid rgba(30,42,56,.5);
+    vertical-align:middle;
+  }
+  .log-table tr:hover td { background:rgba(0,229,255,.03); }
+  .disc-badge { 
+    display:inline-block; padding:3px 8px; border-radius:4px;
+    font-size:10px; font-weight:600; font-family:'IBM Plex Mono',monospace;
+  }
+  .perf-badge { 
+    display:inline-block; width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; font-family:'IBM Plex Mono',monospace;
+  }
+  .perf-high { background:rgba(127,255,107,.2); color:var(--accent3); border:1px solid var(--accent3); }
+  .perf-mid { background:rgba(255,214,10,.2); color:var(--accent5); border:1px solid var(--accent5); }
+  .perf-low { background:rgba(255,71,87,.2); color:var(--red); border:1px solid var(--red); }
+
+  /* REVISION SYSTEM */
+  .rev-card { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+    padding:14px 16px; margin-bottom:8px; display:flex; align-items:center;
+    justify-content:space-between; cursor:pointer; transition:all .2s;
+  }
+  .rev-card:hover { border-color:var(--accent); }
+  .rev-card.urgent { border-left:3px solid var(--red); }
+  .rev-card.due { border-left:3px solid var(--accent5); }
+  .rev-card.ok { border-left:3px solid var(--accent3); }
+  .rev-info { flex:1; }
+  .rev-topic { font-size:13px; font-weight:600; margin-bottom:3px; }
+  .rev-meta { font-size:11px; color:var(--text2); font-family:'IBM Plex Mono',monospace; }
+  .rev-badge { 
+    padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700;
+    font-family:'IBM Plex Mono',monospace; white-space:nowrap;
+  }
+  .rev-badge.urgent { background:rgba(255,71,87,.2); color:var(--red); }
+  .rev-badge.due { background:rgba(255,214,10,.2); color:var(--accent5); }
+  .rev-badge.ok { background:rgba(127,255,107,.2); color:var(--accent3); }
+
+  /* MONTHLY VIEW */
+  .month-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .month-card { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+    padding:18px; position:relative; overflow:hidden;
+  }
+  .month-num { 
+    position:absolute; top:12px; right:16px;
+    font-family:'Syne',sans-serif; font-size:48px; font-weight:800;
+    color:rgba(255,255,255,.04); line-height:1;
+  }
+  .month-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; margin-bottom:4px; }
+  .month-phase { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-family:'IBM Plex Mono',monospace; }
+  .month-focus { margin-bottom:12px; }
+  .month-focus-title { font-size:10px; color:var(--text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+  .month-pill { 
+    display:inline-block; padding:3px 8px; border-radius:4px; font-size:10px;
+    font-weight:600; margin-right:4px; margin-bottom:4px;
+  }
+  .month-goal { 
+    background:var(--bg3); border-radius:8px; padding:10px 12px;
+    font-size:12px; color:var(--text2); border-left:2px solid var(--accent);
+  }
+
+  /* NEUROCOG ALERTS */
+  .alert { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+    padding:14px 16px; margin-bottom:8px; display:flex; gap:12px; align-items:flex-start;
+  }
+  .alert-icon { font-size:16px; flex-shrink:0; }
+  .alert-title { font-size:12px; font-weight:600; margin-bottom:3px; }
+  .alert-text { font-size:12px; color:var(--text2); line-height:1.5; }
+
+  /* STATS CHART */
+  .chart-container { background:var(--bg3); border-radius:8px; padding:16px; }
+  .bar-chart { display:flex; align-items:flex-end; gap:8px; height:100px; }
+  .bar-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .bar { border-radius:3px 3px 0 0; width:100%; transition:height .5s; min-height:4px; }
+  .bar-label { font-size:9px; color:var(--text3); font-family:'IBM Plex Mono',monospace; text-align:center; }
+  .bar-val { font-size:9px; font-family:'IBM Plex Mono',monospace; }
+
+  /* MODAL */
+  .modal-overlay { 
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.8);
+    z-index:1000; align-items:center; justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+  .modal-overlay.open { display:flex; }
+  .modal { 
+    background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+    padding:24px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto;
+  }
+  .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .modal-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; }
+  .modal-close { background:none; border:none; color:var(--text2); cursor:pointer; font-size:20px; }
+
+  /* EMPTY STATE */
+  .empty { text-align:center; padding:40px; color:var(--text3); }
+  .empty-icon { font-size:32px; margin-bottom:8px; }
+  .empty-text { font-size:13px; }
+
+  /* TABS */
+  .tabs { display:flex; gap:4px; margin-bottom:16px; background:var(--bg3); padding:4px; border-radius:8px; width:fit-content; }
+  .tab { 
+    padding:6px 16px; border-radius:6px; border:none; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:500;
+    color:var(--text2); background:none; transition:all .2s;
+  }
+  .tab.active { background:var(--bg2); color:var(--text); }
+
+  /* TOOLTIP */
+  .tooltip { position:relative; }
+  .tooltip .tip { 
+    display:none; position:absolute; bottom:calc(100% + 6px); left:50%;
+    transform:translateX(-50%); background:var(--bg3); border:1px solid var(--border);
+    border-radius:6px; padding:6px 10px; font-size:11px; white-space:nowrap;
+    z-index:10; pointer-events:none;
+  }
+  .tooltip:hover .tip { display:block; }
+
+  /* RESPONSIVE helpers */
+  .flex-between { display:flex; justify-content:space-between; align-items:center; }
+  .gap8 { gap:8px; }
+  .mb12 { margin-bottom:12px; }
+  .mb20 { margin-bottom:20px; }
+  .text-mono { font-family:'IBM Plex Mono',monospace; }
+
+  /* ERROR INDICATOR */
+  .err-item { 
+    display:flex; gap:10px; align-items:flex-start; padding:10px;
+    background:var(--bg3); border-radius:8px; margin-bottom:6px;
+  }
+  .err-num { 
+    background:var(--red); color:#fff; width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; flex-shrink:0;
+  }
+  .err-text { font-size:12px; line-height:1.5; }
+  .err-disc { font-size:10px; color:var(--text3); margin-top:2px; font-family:'IBM Plex Mono',monospace; }
+
+  /* Streak */
+  .streak { 
+    display:flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent5);
+  }
+
+  @media (max-width:900px) { 
+    .dash-grid { grid-template-columns:repeat(2,1fr); }
+    .disc-grid { grid-template-columns:repeat(2,1fr); }
+    .two-col,.three-col { grid-template-columns:1fr; }
+    .month-grid { grid-template-columns:1fr; }
+    .log-form { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">AUDITOR FISCAL <span>| SEFAZ-BA | FGV</span></div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showView('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showView('semanal')">Semana</button>
+    <button class="nav-btn" onclick="showView('mensal')">6 Meses</button>
+    <button class="nav-btn" onclick="showView('registro')">Registrar</button>
+    <button class="nav-btn" onclick="showView('revisao')">Revisão</button>
+    <button class="nav-btn" onclick="showView('erros')">Erros</button>
+    <button class="nav-btn" onclick="showView('neuro')">Neurocog</button>
+  </nav>
+  <div class="header-right">
+    <div class="streak" id="streakBadge">🔥 0 dias</div>
+    <div class="date-badge" id="dateBadge"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="view active" id="view-dashboard">
+    <div class="dash-grid mb20">
+      <div class="kpi cyan">
+        <div class="kpi-label">Horas Totais</div>
+        <div class="kpi-value" id="kpiHoras" style="color:var(--accent)">0h</div>
+        <div class="kpi-sub">Meta: 720h em 6 meses</div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="progHoras" style="background:var(--accent);width:0%"></div></div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">Questões Resolvidas</div>
+        <div class="kpi-value" id="kpiQuestoes" style="color:var(--accent2)">0</div>
+        <div class="kpi-sub">Meta: 5.000 questões</div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="progQ" style="background:var(--accent2);width:0%"></div></div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">Taxa de Acerto Média</div>
+        <div class="kpi-value" id="kpiAcerto" style="color:var(--accent3)">—%</div>
+        <div class="kpi-sub">Meta mínima: 70%</div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="progAcerto" style="background:var(--accent3);width:0%"></div></div>
+      </div>
+      <div class="kpi purple">
+        <div class="kpi-label">Tópicos Registrados</div>
+        <div class="kpi-value" id="kpiTopicos" style="color:var(--accent4)">0</div>
+        <div class="kpi-sub">Revisões pendentes: <span id="kpiRevPend">0</span></div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="progTopicos" style="background:var(--accent4);width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="section-title">Distribuição por Disciplina — Carga Horária Estratégica</div>
+    <div class="disc-grid mb20" id="discGrid"></div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Evolução Semanal — Horas de Estudo</div>
+        <div class="chart-container" id="weeklyChart"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Próximas Revisões Espaçadas</div>
+        <div id="dashRevisions"></div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:16px">
+      <div class="card">
+        <div class="card-title">Acerto por Disciplina</div>
+        <div id="discAccuracy"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Últimos Registros</div>
+        <div id="recentLogs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEMANAL ===== -->
+  <div class="view" id="view-semanal">
+    <div class="flex-between mb12">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="section-title" style="margin-bottom:0">Semana 1 — Fundação Tributária</div>
+        <select class="form-control" id="semanaSelect" onchange="renderSemana()" style="width:200px;font-size:12px">
+          <option value="1">Semana 1 — Fundação Tributária</option>
+          <option value="2">Semana 2 — ICMS Profundo I</option>
+          <option value="3">Semana 3 — ICMS Profundo II</option>
+          <option value="4">Semana 4 — Direito Tributário I</option>
+          <option value="5">Semana 5 — Contabilidade I</option>
+          <option value="6">Semana 6 — Contabilidade II</option>
+          <option value="7">Semana 7 — Auditoria Fiscal I</option>
+          <option value="8">Semana 8 — Consolidação Mês 2</option>
+          <option value="9">Semana 9 — Dir. Tributário II</option>
+          <option value="10">Semana 10 — ICMS Avançado</option>
+          <option value="11">Semana 11 — Contabilidade Avançada</option>
+          <option value="12">Semana 12 — Simulado Geral I</option>
+          <option value="13">Semana 13 — Auditoria II + AFO</option>
+          <option value="14">Semana 14 — Dir. Constitucional</option>
+          <option value="15">Semana 15 — Dir. Administrativo</option>
+          <option value="16">Semana 16 — Língua Portuguesa</option>
+          <option value="17">Semana 17 — Simulado Geral II</option>
+          <option value="18">Semana 18 — Revisão Intensiva I</option>
+          <option value="19">Semana 19 — Revisão Intensiva II</option>
+          <option value="20">Semana 20 — Simulado Final</option>
+          <option value="21">Semana 21 — Reta Final</option>
+          <option value="22">Semana 22 — Semana da Prova</option>
+          <option value="23">Semana 23 — Pós-Prova / Discursiva</option>
+          <option value="24">Semana 24 — Banco de Reserva</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:6px">
+        <span style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-right:8px"><span style="width:10px;height:10px;background:rgba(0,229,255,.3);border-radius:2px;display:inline-block"></span>Teoria</span>
+        <span style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-right:8px"><span style="width:10px;height:10px;background:rgba(127,255,107,.3);border-radius:2px;display:inline-block"></span>Questões</span>
+        <span style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-right:8px"><span style="width:10px;height:10px;background:rgba(255,71,87,.3);border-radius:2px;display:inline-block"></span>Simulado</span>
+        <span style="font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:rgba(100,100,100,.3);border-radius:2px;display:inline-block"></span>Revisão</span>
+      </div>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <div id="calendarGrid"></div>
+    </div>
+    <div class="three-col" style="margin-top:16px">
+      <div class="card">
+        <div class="card-title">Carga da Semana</div>
+        <div id="semanaStats"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Regras Táticas</div>
+        <div id="regrasTaticas"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Meta Semanal</div>
+        <div id="metaSemanal"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6 MESES ===== -->
+  <div class="view" id="view-mensal">
+    <div class="section-title">Arquitetura dos 6 Meses — Plano Estratégico Integral</div>
+    <div class="month-grid" id="monthGrid"></div>
+  </div>
+
+  <!-- ===== REGISTRO ===== -->
+  <div class="view" id="view-registro">
+    <div class="section-title">Registro de Estudo</div>
+    <div class="log-form">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input type="date" class="form-control" id="logDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Disciplina</label>
+        <select class="form-control" id="logDisc">
+          <option value="icms">ICMS-BA (Lei 7.014/96)</option>
+          <option value="trib">Direito Tributário</option>
+          <option value="cont">Contabilidade Geral/Custos</option>
+          <option value="audit">Auditoria Fiscal</option>
+          <option value="const">Direito Constitucional</option>
+          <option value="admin">Direito Administrativo</option>
+          <option value="port">Língua Portuguesa</option>
+          <option value="stat">Estatística/Mat. Financeira</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tópico Estudado</label>
+        <input type="text" class="form-control" id="logTopic" placeholder="Ex: Fato Gerador ICMS">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horas</label>
+        <input type="number" class="form-control" id="logHours" min="0.5" max="8" step="0.5" placeholder="2.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Questões</label>
+        <input type="number" class="form-control" id="logQ" min="0" step="5" placeholder="30">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Acertos (%)</label>
+        <input type="number" class="form-control" id="logPerf" min="0" max="100" placeholder="75">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select class="form-control" id="logType">
+          <option value="teoria">Teoria</option>
+          <option value="questoes">Questões</option>
+          <option value="revisao">Revisão</option>
+          <option value="simulado">Simulado</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Anotação</label>
+        <input type="text" class="form-control" id="logNote" placeholder="Obs. (opcional)">
+      </div>
+      <button class="btn" onclick="addLog()">+ Registrar</button>
+    </div>
+
+    <div class="flex-between mb12">
+      <div class="tabs" id="logTabs">
+        <button class="tab active" onclick="filterLog('all',this)">Todos</button>
+        <button class="tab" onclick="filterLog('icms',this)">ICMS</button>
+        <button class="tab" onclick="filterLog('trib',this)">Dir. Trib.</button>
+        <button class="tab" onclick="filterLog('cont',this)">Contabil.</button>
+        <button class="tab" onclick="filterLog('audit',this)">Auditoria</button>
+      </div>
+      <button class="btn ghost" onclick="if(confirm('Limpar todos os registros?'))clearLogs()">Limpar Tudo</button>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="log-table" id="logTable">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Disciplina</th>
+            <th>Tópico</th>
+            <th>Horas</th>
+            <th>Questões</th>
+            <th>Acerto</th>
+            <th>Tipo</th>
+            <th>Nota</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== REVISÃO ===== -->
+  <div class="view" id="view-revisao">
+    <div class="two-col mb20">
+      <div>
+        <div class="section-title">Adicionar Tópico ao Sistema de Revisão</div>
+        <div class="card">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tópico</label>
+              <input type="text" class="form-control" id="revTopic" placeholder="Ex: Não-cumulatividade ICMS">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Disciplina</label>
+              <select class="form-control" id="revDisc">
+                <option value="icms">ICMS-BA</option>
+                <option value="trib">Dir. Tributário</option>
+                <option value="cont">Contabilidade</option>
+                <option value="audit">Auditoria</option>
+                <option value="const">Dir. Constitucional</option>
+                <option value="admin">Dir. Administrativo</option>
+                <option value="port">Língua Portuguesa</option>
+                <option value="stat">Estatística</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Data do Estudo</label>
+              <input type="date" class="form-control" id="revDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dificuldade</label>
+              <select class="form-control" id="revDiff">
+                <option value="easy">Fácil — Rev. +7d, +21d, +60d</option>
+                <option value="med" selected>Médio — Rev. +3d, +7d, +21d, +45d</option>
+                <option value="hard">Difícil — Rev. +1d, +3d, +7d, +14d, +30d</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn" onclick="addRevision()" style="width:100%">+ Adicionar ao Sistema de Revisão</button>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">Status das Revisões</div>
+        <div class="dash-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi" style="border-top:2px solid var(--red)">
+            <div class="kpi-label">Urgentes</div>
+            <div class="kpi-value" id="revUrgent" style="color:var(--red)">0</div>
+            <div class="kpi-sub">Vencidas</div>
+          </div>
+          <div class="kpi" style="border-top:2px solid var(--accent5)">
+            <div class="kpi-label">Hoje</div>
+            <div class="kpi-value" id="revToday" style="color:var(--accent5)">0</div>
+            <div class="kpi-sub">Para revisar</div>
+          </div>
+          <div class="kpi" style="border-top:2px solid var(--accent3)">
+            <div class="kpi-label">Total</div>
+            <div class="kpi-value" id="revTotal" style="color:var(--accent3)">0</div>
+            <div class="kpi-sub">Registrados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="filterRevs('all',this)">Todos</button>
+      <button class="tab" onclick="filterRevs('urgent',this)">🔴 Vencidos</button>
+      <button class="tab" onclick="filterRevs('due',this)">🟡 Hoje</button>
+      <button class="tab" onclick="filterRevs('ok',this)">🟢 Em Dia</button>
+    </div>
+    <div id="revList"></div>
+  </div>
+
+  <!-- ===== ERROS ===== -->
+  <div class="view" id="view-erros">
+    <div class="section-title">Catálogo de Erros — Engenharia Reversa dos Pontos Fracos</div>
+    <div class="two-col">
+      <div>
+        <div class="card mb12">
+          <div class="card-title">Registrar Erro</div>
+          <div class="form-group mb12">
+            <label class="form-label">Mecanismo da Armadilha</label>
+            <input type="text" class="form-control" id="errTrap" placeholder="Ex: Confundiu momento da ocorrência do fato gerador">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Disciplina</label>
+              <select class="form-control" id="errDisc">
+                <option value="icms">ICMS-BA</option>
+                <option value="trib">Dir. Tributário</option>
+                <option value="cont">Contabilidade</option>
+                <option value="audit">Auditoria</option>
+                <option value="const">Dir. Constitucional</option>
+                <option value="admin">Dir. Administrativo</option>
+                <option value="port">Língua Portuguesa</option>
+                <option value="stat">Estatística</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Artigo/Dispositivo</label>
+              <input type="text" class="form-control" id="errArt" placeholder="Ex: Art. 14, Lei 7.014/96">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Como Evitar</label>
+            <input type="text" class="form-control" id="errFix" placeholder="Regra mnemônica ou correção">
+          </div>
+          <button class="btn" onclick="addError()" style="width:100%">+ Catalogar Erro</button>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">Padrões de Armadilha Identificados</div>
+          <div id="errPatterns"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:20px">Catálogo Completo de Erros</div>
+    <div id="errList"></div>
+  </div>
+
+  <!-- ===== NEUROCOG ===== -->
+  <div class="view" id="view-neuro">
+    <div class="section-title">Protocolo Neurocognitivo — Princípios Científicos do Estudo de Elite</div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-title" style="color:var(--accent)">⚡ Aprendizagem Ativa</div>
+        <div class="alert"><div class="alert-icon">1</div><div><div class="alert-title">Lei da Geração</div><div class="alert-text">Nunca releia passivamente. Para cada conceito, produza output: resolva questão, escreva síntese ou elabore exemplo. O ato de recuperar informação é mais potente que reler (Testing Effect — Roediger & Karpicke, 2006).</div></div></div>
+        <div class="alert"><div class="alert-icon">2</div><div><div class="alert-title">Espaçamento Distribuído</div><div class="alert-text">Não concentre revisões. Algoritmo de revisão espaçada: 1º revisão em 24h, 2ª em 72h, 3ª em 7d, 4ª em 21d, 5ª em 60d. Cada revisão bem-sucedida duplica o intervalo seguinte.</div></div></div>
+        <div class="alert"><div class="alert-icon">3</div><div><div class="alert-title">Intercalação</div><div class="alert-text">Alternar disciplinas em blocos de 90-120 min é superior à concentração de horas na mesma matéria (blocked vs. interleaved practice). Aplique semanalmente: ICMS → Tributário → Contabilidade.</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--accent2)">🧠 Gestão Cognitiva</div>
+        <div class="alert"><div class="alert-icon">4</div><div><div class="alert-title">Carga Cognitiva</div><div class="alert-text">Blocos de 90 min + pausa de 15 min (Ciclos Ultradianos). Após 4 ciclos, pausa maior obrigatória. Não estude mais de 6h sem sono intermediário — o hipocampo satura e a retenção cai para menos de 30%.</div></div></div>
+        <div class="alert"><div class="alert-icon">5</div><div><div class="alert-title">Sono e Consolidação</div><div class="alert-text">O sono profundo (NREM fase 3) é o momento de transferência da memória declarativa do hipocampo para o neocórtex. Dormir menos de 7h antes de uma sessão intensiva reduz a capacidade de consolidar em até 40% (Walker, 2017).</div></div></div>
+        <div class="alert"><div class="alert-icon">6</div><div><div class="alert-title">Primazia e Recência</div><div class="alert-text">O cérebro retém melhor o início e o fim de cada sessão. Portanto: coloque o conteúdo mais difícil nos primeiros 20-30 min do bloco. Termine com revisão rápida do que foi visto no início (efeito recência deliberado).</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--accent3)">📊 Protocolo Semanal de Elite</div>
+        <div class="alert"><div class="alert-icon">🗓</div><div><div class="alert-title">Estrutura Semanal Ideal</div><div class="alert-text"><strong>Seg-Sex (dias úteis):</strong> Blocos matutinos de teoria (cognitivamente demandante) → blocos vespertinos de questões.<br><strong>Sábado:</strong> Diagnóstico real: 40 questões cronometradas, 3 min/questão. Identifica o pior resultado.<br><strong>Domingo manhã:</strong> Apenas releitura dos artigos marcados na semana.<br><strong>Domingo à noite:</strong> Planejamento da semana seguinte (30 min).</div></div></div>
+        <div class="alert"><div class="alert-icon">⚠</div><div><div class="alert-title">Catálogo de Erros — Regra de Ouro</div><div class="alert-text">Ao errar: registre o artigo, o mecanismo da armadilha e a regra corretiva. Isso vale mais do que fazer 50 questões extras. O erro não catalogado se repete. O erro catalogado torna-se imunidade.</div></div></div>
+        <div class="alert"><div class="alert-icon">🎯</div><div><div class="alert-title">Alerta Mês 1-2</div><div class="alert-text">Contabilidade Avançada, Auditoria, AFO e Estatística NÃO entram no Mês 1. Construa a base tributária primeiro — ICMS + CTN. Essas disciplinas dependem estruturalmente do que você está assentando agora. Elas entram a partir da semana 5.</div></div></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:8px">Cronograma Circadiano Ideal — Auditor Fiscal</div>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px" id="circadianGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Detalhes</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ==================== STATE ====================
+let state = {
+  logs: [],
+  revisions: [],
+  errors: [],
+  currentLogFilter: 'all',
+  currentRevFilter: 'all'
+};
+
+// DISCIPLINES CONFIG
+const DISCIPLINES = {
+  icms:  { name:'ICMS-BA', color:'var(--icms)',  targetH:216, q:20, label:'Lei 7.014/96 + RIPSA' },
+  trib:  { name:'Dir. Tributário', color:'var(--trib)', targetH:162, q:12, label:'CTN + CF + STF/STJ' },
+  cont:  { name:'Contabilidade', color:'var(--cont)',  targetH:126, q:12, label:'Geral + Custos + Avançada' },
+  audit: { name:'Auditoria Fiscal', color:'var(--audit)', targetH:108, q:10, label:'NBC TA + COSO + IIA' },
+  const: { name:'Dir. Constitucional', color:'var(--const)', targetH:54, q:6, label:'CF/88 + STF + EC' },
+  admin: { name:'Dir. Administrativo', color:'var(--admin)', targetH:54, q:6, label:'Atos + Licitação + Contr.' },
+  port:  { name:'Língua Portuguesa', color:'var(--port)',  targetH:36, q:6, label:'Gramática + Interpretação' },
+  stat:  { name:'Estat./Mat. Fin.', color:'var(--stat)',  targetH:36, q:4, label:'Estatística + Juros' },
+};
+
+// WEEKLY SCHEDULE DATA
+const SEMANA_DATA = {
+  1: {
+    title: 'Semana 1 — Fundação Tributária',
+    phase: 'MÊS 1 — BASE',
+    schedule: [
+      // [bloco, seg, ter, qua, qui, sex, sab, dom]
+      ['8–10h',
+        {disc:'icms',topic:'CTN 113–138\nObrigação Tributária\n+ Responsab.',type:'Teoria'},
+        {disc:'icms',topic:'CTN 139–193:\nCrédito Tributário\ncompleto',type:'Lei'},
+        {disc:'icms',topic:'Lei 7.014/96\nArts.1–47:\nFato gerador,\nnão incidência,\nconstituintes',type:'Lei'},
+        {disc:'icms',topic:'Lei 7.014/96\nArts. 48–75:\nBase cálculo,\nalíquotas,\ncrédito ICMS',type:'Teoria'},
+        {disc:'const',topic:'Dir. Constitucional\nCF/88 145–162\n— STN completo\n(texto pós-EC 132)',type:'Lei'},
+        {disc:'sim',topic:'Diagnóstico\n40 questões\nmistas\ncronometradas\nCTN+ICMS+Const.',type:'Simulado'},
+        {disc:'rev',topic:'Revisão ativa:\nReleitura dos\nartigos marcados\nem vermelho\nna semana',type:'Revisão'},
+      ],
+      ['10–12h',
+        {disc:'icms',topic:'Questões — CTN\n30 questões:\nObrigação +\nResponsab. Tributária',type:'Questões'},
+        {disc:'icms',topic:'Questões:\nCTN + crédito\n20 questões CTN\n+10 questões\nICMS básico',type:'Questões'},
+        {disc:'icms',topic:'Questões — ICMS\n30 questões:\nfato gerador,\nconstituinte,\nsubst. tributária',type:'Questões'},
+        {disc:'icms',topic:'Questões — ICMS\n30 questões\nexclusivamente\nsobre crédito\ndo ICMS',type:'Questões'},
+        {disc:'admin',topic:'Dir. Administrativo\nAto Administrativo:\nconceito,\nelementos,\nextinção',type:'Teoria'},
+        {disc:'rev',topic:'Análise do\nDiagnóstico:\ncalcule % por\ndisciplina.\nIdentifique\no pior resultado.',type:'Revisão'},
+        {disc:'port',topic:'Leitura densa\n30 min: Montaigne\n/ Vieira / texto\nfilosófico\n(Português)',type:'Teoria'},
+      ],
+      ['12–13h',
+        {disc:'port',topic:'Leitura densa\n30 min: ensaio de\nMontaigne ou\ntexto de Vieira\n(Português)',type:'Teoria'},
+        {disc:'trib',topic:'Jurisprudência\nSTF 3–5 teses:\nRE 574.706,\nRE 1.167.264,\nSúmula 435 STJ',type:'Teoria'},
+        {disc:'port',topic:'Leitura densa\n30 min: texto\nfilosófico ou\nliterário\n(Português)',type:'Teoria'},
+        {disc:'icms',topic:'Tabela de crédito:\nconstrução à mão:\nentrada × destino\nda saída × direito\nao crédito',type:'Revisão'},
+        {disc:'admin',topic:'Reforço\nDir. Admin.\n15 questões\nsobre ato adm.',type:'Questões'},
+        {disc:'rev',topic:'Reforço ponto\nfraco: 90 min na\ndisciplina de\npior desempenho\nno diagnóstico',type:'Questões'},
+        {disc:'rev',topic:'Planejamento\nsemana 2:\ndefina os temas\nexatos de cada\nbloco da próxima\nsemana',type:'Revisão'},
+      ],
+    ],
+    stats: { horas:'30h', questoes:'180+', disciplinas:'5', meta:'60% de acerto' },
+    regras: [
+      'Leia o CTN e a Lei 7.014/96 diretamente antes do vídeo — videoaula só serve para dúvidas pontuais.',
+      'Questão no mesmo dia: teoria de manhã, questões à tarde. Intervalo máximo: 4 horas.',
+      'Ao errar: registre o artigo, o mecanismo da armadilha. Isso vale mais que 50 questões extras.',
+      'Domingo: só releitura — nenhum artigo novo. Releia apenas os marcados com dúvida na semana.',
+      'Sábado: diagnóstico real — 40 questões cronometradas, 3 min/questão. O pior resultado = prioridade da semana seguinte.',
+    ],
+    meta: 'Dominar a estrutura básica do CTN (obrigação, responsabilidade, crédito tributário) + Fato gerador do ICMS. Taxa de acerto-alvo ao final da semana: 55-65% nas questões de revisão.',
+  },
+};
+
+// Fill remaining weeks with generated data
+const WEEK_TEMPLATES = [
+  {title:'ICMS Profundo I', disc:'icms', topics:['Sujeitos Passivos','Isenções e Imunidades ICMS','Substituição Tributária ST'], phase:'MÊS 1 — BASE'},
+  {title:'ICMS Profundo II', disc:'icms', topics:['Não-cumulatividade','Crédito Extemporâneo','RIPSA — Regulamento'], phase:'MÊS 1 — BASE'},
+  {title:'Direito Tributário I', disc:'trib', topics:['Competência Tributária','Imunidades CF/88','ICMS constitucional'], phase:'MÊS 1 — BASE'},
+  {title:'Contabilidade Geral I', disc:'cont', topics:['Equação Patrimonial','Partidas Dobradas','Demonstrações Contábeis'], phase:'MÊS 2 — EXPANSÃO'},
+  {title:'Contabilidade Geral II', disc:'cont', topics:['Estoques (PEPS/UEPS/Médio)','Depreciação','Provisões'], phase:'MÊS 2 — EXPANSÃO'},
+  {title:'Auditoria Fiscal I', disc:'audit', topics:['Auditoria Interna vs Externa','Planejamento da Auditoria','Controles Internos COSO'], phase:'MÊS 2 — EXPANSÃO'},
+  {title:'Consolidação Mês 2', disc:'sim', topics:['Simulado Misto','Análise de Erros','Revisão ICMS + CTN'], phase:'MÊS 2 — EXPANSÃO'},
+  {title:'Dir. Tributário II', disc:'trib', topics:['Lançamento Tributário','Extinção do Crédito','Exclusão do Crédito'], phase:'MÊS 3 — APROFUNDAMENTO'},
+  {title:'ICMS Avançado', disc:'icms', topics:['DIFAL (EC 87/2015)','ICMS ST — MVA','Regime Especial Tributação'], phase:'MÊS 3 — APROFUNDAMENTO'},
+  {title:'Contabilidade Avançada', disc:'cont', topics:['Combinações de Negócios','MEP — Equivalência Patrimonial','Redução ao Valor Recuperável'], phase:'MÊS 3 — APROFUNDAMENTO'},
+  {title:'Simulado Geral I', disc:'sim', topics:['70 questões — Prova completa','Análise estatística','Revisão intensiva dos erros'], phase:'MÊS 3 — APROFUNDAMENTO'},
+  {title:'Auditoria II + AFO', disc:'audit', topics:['NBC TA 315/320/500','IPSAS/NBC TSP','Orçamento Público — Ciclo'], phase:'MÊS 4 — CONSOLIDAÇÃO'},
+  {title:'Dir. Constitucional', disc:'const', topics:['Repartição Tributária','STF — Repercussão Geral','EC 132/2023 — Reforma Tributária'], phase:'MÊS 4 — CONSOLIDAÇÃO'},
+  {title:'Dir. Administrativo', disc:'admin', topics:['Licitação — Lei 14.133','Contratos Administrativos','Improbidade — Lei 8.429'], phase:'MÊS 4 — CONSOLIDAÇÃO'},
+  {title:'Língua Portuguesa', disc:'port', topics:['Concordância + Regência','Interpretação de Texto','Redação Oficial'], phase:'MÊS 4 — CONSOLIDAÇÃO'},
+  {title:'Simulado Geral II', disc:'sim', topics:['80 questões — Nível avançado','Temas emergentes FGV','Análise de distratores'], phase:'MÊS 5 — SIMULADOS'},
+  {title:'Revisão Intensiva I', disc:'rev', topics:['ICMS — artigos críticos','CTN — exceções e pegadinhas','Contabilidade — fórmulas'], phase:'MÊS 5 — SIMULADOS'},
+  {title:'Revisão Intensiva II', disc:'rev', topics:['Auditoria — NBCs essenciais','Jurisprudência STF/STJ 2024','Exercícios por banca FGV'], phase:'MÊS 5 — SIMULADOS'},
+  {title:'Simulado Final', disc:'sim', topics:['Simulado cronometrado — condições reais','Revisão de TODOS os erros','Calibragem de tempo'], phase:'MÊS 6 — RETA FINAL'},
+  {title:'Reta Final', disc:'rev', topics:['Releitura das tabelas estratégicas','Leitura de artigos-chave','Zero questão inédita'], phase:'MÊS 6 — RETA FINAL'},
+  {title:'Semana da Prova', disc:'rev', topics:['Revisão leve (2h/dia)','Sono regulado — 8h obrigatórias','Simulação de logística'], phase:'MÊS 6 — RETA FINAL'},
+  {title:'Pós-Prova / Discursiva', disc:'trib', topics:['Temas prováveis discursiva','ICMS constitucional — estrutura','Redação técnico-jurídica'], phase:'MÊS 6 — RETA FINAL'},
+  {title:'Banco de Reserva', disc:'sim', topics:['Questões reserva','Estudo contínuo leve','Manutenção do conhecimento'], phase:'MÊS 6 — RETA FINAL'},
+];
+
+for(let i=2;i<=24;i++){
+  const t = WEEK_TEMPLATES[i-2] || WEEK_TEMPLATES[WEEK_TEMPLATES.length-1];
+  SEMANA_DATA[i] = {
+    title:`Semana ${i} — ${t.title}`,
+    phase: t.phase,
+    stats:{horas: i<=4?'30h':i<=8?'32h':i<=12?'34h':i<=16?'35h':'36h', questoes: i<=4?'180+':i<=8?'200+':i<=12?'220+':i<=16?'240+':'260+', disciplinas: i<=4?'5':i<=8?'6':i<=12?'7':'7', meta: i<=8?'65%':i<=16?'70%':'75%'},
+    regras: SEMANA_DATA[1].regras,
+    meta: `Foco: ${t.topics.join(' → ')}. Semana de ${t.phase}.`,
+    schedule: generateSchedule(t.disc, t.topics),
+  };
+}
+
+function generateSchedule(mainDisc, topics){
+  const row1=[], row2=[], row3=[];
+  const days=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  for(let i=0;i<7;i++){
+    if(i===5){
+      row1.push({disc:'sim',topic:'Diagnóstico\n40 questões\nmistas\ncronometradas',type:'Simulado'});
+      row2.push({disc:'rev',topic:'Análise de\nDesempenho\nPor disciplina',type:'Revisão'});
+      row3.push({disc:'rev',topic:'Reforço do\nponto fraco\nidentificado',type:'Questões'});
+    } else if(i===6){
+      row1.push({disc:'rev',topic:'Releitura dos\nartigos marcados\nna semana',type:'Revisão'});
+      row2.push({disc:'port',topic:'Leitura densa\n30 min texto\nfilosófico',type:'Teoria'});
+      row3.push({disc:'rev',topic:'Planejamento\nda próxima\nsemana (30min)',type:'Revisão'});
+    } else {
+      row1.push({disc:mainDisc,topic:topics[i%topics.length],type:'Teoria'});
+      row2.push({disc:mainDisc,topic:'Questões\n30-40 itens\n3 min/questão',type:'Questões'});
+      row3.push({disc: i%2===0?'trib':'cont',topic:'Jurisprudência\nou leitura\ncomplementar',type:'Teoria'});
+    }
+  }
+  return [['8–10h',...row1],['10–12h',...row2],['12–13h',...row3]];
+}
+
+// MONTHS DATA
+const MONTHS = [
+  {
+    num:1, title:'Mês 1', subtitle:'FUNDAÇÃO TRIBUTÁRIA',
+    color:'var(--icms)',
+    focus:['ICMS-BA','Dir. Tributário','Dir. Constitucional','Dir. Administrativo'],
+    colors:['icms','trib','const','admin'],
+    hours:{icms:36,trib:27,const:9,admin:9},
+    goal:'Dominar a Lei 7.014/96 (Arts. 1–150) + CTN (Arts. 1–218) na íntegra. Taxa de acerto-alvo ao final do mês: 65% nas questões mistas.',
+    alerta:'Contabilidade, Auditoria, AFO e Estatística NÃO entram neste mês. Base tributária primeiro — as demais disciplinas dependem estruturalmente do que você constrói aqui.',
+  },
+  {
+    num:2, title:'Mês 2', subtitle:'EXPANSÃO CONTÁBIL',
+    color:'var(--cont)',
+    focus:['ICMS-BA (revisão)','Contabilidade Geral','Contabilidade Custos','Auditoria Fiscal I'],
+    colors:['icms','cont','cont','audit'],
+    hours:{icms:18,cont:36,audit:18,trib:9},
+    goal:'Dominar Contabilidade Geral (partidas, demonstrações, estoques) + iniciar Auditoria (NBC TA 300–500). Meta: 68% de acerto global.',
+    alerta:'Não abandone o ICMS — mantenha 1 bloco/dia de revisão da Lei 7.014/96. A Contabilidade entra como complemento, não como substituto.',
+  },
+  {
+    num:3, title:'Mês 3', subtitle:'APROFUNDAMENTO TÉCNICO',
+    color:'var(--trib)',
+    focus:['ICMS Avançado (DIFAL, ST)','Dir. Tributário II','Contabilidade Avançada','1º Simulado Geral'],
+    colors:['icms','trib','cont','sim'],
+    hours:{icms:27,trib:27,cont:27,sim:9},
+    goal:'Primeiro simulado de prova completa ao final do mês. Meta: 70% de acerto global. Identificar disciplina-gap e iniciar recuperação intensiva.',
+    alerta:'A Semana 12 é exclusivamente de simulado + análise. Zero conteúdo novo nessa semana. O diagnóstico é o produto.',
+  },
+  {
+    num:4, title:'Mês 4', subtitle:'CONSOLIDAÇÃO + GERAIS',
+    color:'var(--admin)',
+    focus:['Auditoria Fiscal II (NBC TSP, IIA)','AFO — Orçamento Público','Dir. Constitucional (avançado)','Dir. Administrativo (Lei 14.133)'],
+    colors:['audit','audit','const','admin'],
+    hours:{audit:27,const:18,admin:18,port:9,stat:9},
+    goal:'Completar auditoria + conhecimentos gerais. As disciplinas gerais (Const., Admin., Português) devem alcançar 75% de acerto — elas são a diferença de 6 a 8 pontos na objetiva.',
+    alerta:'Língua Portuguesa entra neste mês. Não deixe para o mês 5 — a interpretação de texto melhora com acúmulo de exposição a textos densos.',
+  },
+  {
+    num:5, title:'Mês 5', subtitle:'SIMULADOS E CALIBRAÇÃO',
+    color:'var(--accent2)',
+    focus:['Simulados semanais (70-80 questões)','Análise estatística de desempenho','Revisão cirúrgica dos erros recorrentes','Jurisprudência 2024-2025 STF/STJ'],
+    colors:['sim','sim','rev','trib'],
+    hours:{sim:36,rev:27,icms:9,trib:9},
+    goal:'Meta do mês: 75% de acerto nos simulados. Se uma disciplina estiver abaixo de 60%, ela vira prioridade exclusiva por 3 dias até atingir 65%.',
+    alerta:'Neste mês, não estude nada que não seja cobrado com alta frequência pela FGV. Zero curiosidade intelectual — 100% estratégia.',
+  },
+  {
+    num:6, title:'Mês 6', subtitle:'RETA FINAL',
+    color:'var(--red)',
+    focus:['Revisão cumulativa (não estude nada novo)','Manutenção de acerto por catálogo de erros','Simulação logística da prova','Semana da prova: sono + alimentação + revisão leve'],
+    colors:['rev','rev','sim','rev'],
+    hours:{rev:54,sim:18,icms:0,trib:0},
+    goal:'Chegue à prova com a mente consolidada e o ritmo calibrado. Meta: 77-80% nos simulados finais. Na semana da prova: máximo 2h/dia, zero conteúdo novo.',
+    alerta:'Na semana da prova, o estudo já não muda o resultado — a prova é ganha no mês 1 ao 5. Durma 8h, hidrate-se, simule a logística do deslocamento.',
+  },
+];
+
+// ==================== INIT ====================
+function init(){
+  loadState();
+  setDates();
+  renderDashboard();
+  renderSemana();
+  renderMonths();
+  renderLogTable();
+  renderRevisions();
+  renderErrors();
+  renderNeuro();
+}
+
+function loadState(){
+  try {
+    const s = localStorage.getItem('auditorFiscalState');
+    if(s) state = {...state, ...JSON.parse(s)};
+  } catch(e){}
+}
+
+function saveState(){
+  try { localStorage.setItem('auditorFiscalState', JSON.stringify(state)); } catch(e){}
+}
+
+function setDates(){
+  const now = new Date();
+  document.getElementById('dateBadge').textContent = now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase();
+  document.getElementById('logDate').valueAsDate = now;
+  document.getElementById('revDate').valueAsDate = now;
+  updateStreak();
+}
+
+function updateStreak(){
+  // Count consecutive days with logs
+  const dates = [...new Set(state.logs.map(l=>l.date))].sort().reverse();
+  let streak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  let check = new Date();
+  for(let i=0;i<365;i++){
+    const d = check.toISOString().split('T')[0];
+    if(dates.includes(d)) streak++;
+    else break;
+    check.setDate(check.getDate()-1);
+  }
+  document.getElementById('streakBadge').textContent = `🔥 ${streak} dia${streak!==1?'s':''}`;
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard(){
+  // KPIs
+  const totalH = state.logs.reduce((s,l)=>s+(+l.hours||0),0);
+  const totalQ = state.logs.reduce((s,l)=>s+(+l.questions||0),0);
+  const logsWithPerf = state.logs.filter(l=>l.perf!==''&&l.perf!=null);
+  const avgAcerto = logsWithPerf.length ? Math.round(logsWithPerf.reduce((s,l)=>s+(+l.perf),0)/logsWithPerf.length) : null;
+  const totalTopicos = state.revisions.length;
+  const revPend = getRevisionsDue().length;
+
+  document.getElementById('kpiHoras').textContent = totalH.toFixed(1)+'h';
+  document.getElementById('kpiQuestoes').textContent = totalQ;
+  document.getElementById('kpiAcerto').textContent = avgAcerto!==null ? avgAcerto+'%' : '—%';
+  document.getElementById('kpiTopicos').textContent = totalTopicos;
+  document.getElementById('kpiRevPend').textContent = revPend;
+
+  document.getElementById('progHoras').style.width = Math.min(100,totalH/720*100)+'%';
+  document.getElementById('progQ').style.width = Math.min(100,totalQ/5000*100)+'%';
+  document.getElementById('progAcerto').style.width = avgAcerto!==null?Math.min(100,avgAcerto)+'%':'0%';
+  document.getElementById('progTopicos').style.width = Math.min(100,totalTopicos/200*100)+'%';
+
+  // Discipline cards
+  const discGrid = document.getElementById('discGrid');
+  discGrid.innerHTML = '';
+  Object.entries(DISCIPLINES).forEach(([key,d])=>{
+    const hours = state.logs.filter(l=>l.disc===key).reduce((s,l)=>s+(+l.hours||0),0);
+    const pct = Math.round(hours/d.targetH*100);
+    const div = document.createElement('div');
+    div.className = 'disc-card';
+    div.innerHTML = `
+      <div class="disc-name" style="color:${d.color}">${d.name}</div>
+      <div class="disc-hours" style="color:${d.color}">${hours.toFixed(1)}h</div>
+      <div class="disc-pct">${pct}% da meta (${d.targetH}h)</div>
+      <div class="disc-bar"><div class="progress-bar"><div class="progress-fill" style="background:${d.color};width:${Math.min(100,pct)}%"></div></div></div>
+      <div class="disc-questions">~${d.q} questões/prova · ${d.label}</div>
+    `;
+    discGrid.appendChild(div);
+  });
+
+  // Weekly chart
+  renderWeeklyChart();
+
+  // Dashboard revisions
+  const dashRev = document.getElementById('dashRevisions');
+  const dueRevs = getRevisionsDue().slice(0,5);
+  if(!dueRevs.length){
+    dashRev.innerHTML = '<div class="empty"><div class="empty-icon">✓</div><div class="empty-text">Nenhuma revisão pendente</div></div>';
+  } else {
+    dashRev.innerHTML = dueRevs.map(r=>`
+      <div class="rev-card ${r.status}" onclick="">
+        <div class="rev-info">
+          <div class="rev-topic">${r.topic}</div>
+          <div class="rev-meta">${DISCIPLINES[r.disc]?.name||r.disc} · Rev. #${r.revNum+1} · ${r.nextDate}</div>
+        </div>
+        <span class="rev-badge ${r.status}">${r.status==='urgent'?'VENCIDO':r.status==='due'?'HOJE':'EM DIA'}</span>
+      </div>
+    `).join('');
+  }
+
+  // Accuracy by disc
+  const discAcc = document.getElementById('discAccuracy');
+  const accData = Object.entries(DISCIPLINES).map(([key,d])=>{
+    const logsD = state.logs.filter(l=>l.disc===key&&l.perf!==''&&l.perf!=null);
+    const avg = logsD.length ? Math.round(logsD.reduce((s,l)=>s+(+l.perf),0)/logsD.length) : null;
+    return {key,d,avg};
+  }).filter(x=>x.avg!==null);
+  if(!accData.length){
+    discAcc.innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">Registre estudos com acerto para ver estatísticas</div>';
+  } else {
+    discAcc.innerHTML = accData.map(({key,d,avg})=>`
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+          <span style="color:${d.color}">${d.name}</span>
+          <span class="text-mono" style="color:${avg>=70?'var(--accent3)':avg>=55?'var(--accent5)':'var(--red)'}">${avg}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="background:${d.color};width:${avg}%"></div></div>
+      </div>
+    `).join('');
+  }
+
+  // Recent logs
+  const recent = document.getElementById('recentLogs');
+  const lastLogs = [...state.logs].reverse().slice(0,4);
+  if(!lastLogs.length){
+    recent.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">Nenhum registro ainda. <br>Vá em Registrar para começar.</div></div>';
+  } else {
+    recent.innerHTML = lastLogs.map(l=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div class="disc-badge" style="background:${DISCIPLINES[l.disc]?.color}22;color:${DISCIPLINES[l.disc]?.color}">${DISCIPLINES[l.disc]?.name?.split(' ')[0]||l.disc}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.topic}</div>
+          <div style="font-size:10px;color:var(--text3)">${l.date} · ${l.hours}h · ${l.type}</div>
+        </div>
+        ${l.perf!==''&&l.perf!=null ? `<span style="font-size:11px;color:${+l.perf>=70?'var(--accent3)':+l.perf>=55?'var(--accent5)':'var(--red)'}" class="text-mono">${l.perf}%</span>` : ''}
+      </div>
+    `).join('');
+  }
+}
+
+function renderWeeklyChart(){
+  const container = document.getElementById('weeklyChart');
+  // Get last 8 weeks
+  const weeks = [];
+  const now = new Date();
+  for(let i=7;i>=0;i--){
+    const d = new Date(now);
+    d.setDate(d.getDate() - i*7);
+    const start = new Date(d); start.setDate(d.getDate()-6);
+    const label = `S${8-i}`;
+    const h = state.logs.filter(l=>{
+      const ld = new Date(l.date);
+      return ld >= start && ld <= d;
+    }).reduce((s,l)=>s+(+l.hours||0),0);
+    weeks.push({label,h});
+  }
+  const maxH = Math.max(...weeks.map(w=>w.h), 1);
+  container.innerHTML = `
+    <div class="bar-chart">
+      ${weeks.map(w=>`
+        <div class="bar-item">
+          <div class="bar-val" style="color:var(--accent);font-size:9px">${w.h>0?w.h.toFixed(0)+'h':''}</div>
+          <div class="bar" style="background:var(--accent);opacity:0.7;height:${Math.max(4,w.h/maxH*80)}px"></div>
+          <div class="bar-label">${w.label}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:8px;font-family:'IBM Plex Mono',monospace">últimas 8 semanas · meta: 30h/semana</div>
+  `;
+}
+
+// ==================== SEMANA ====================
+function renderSemana(){
+  const sel = document.getElementById('semanaSelect');
+  const weekNum = +sel.value;
+  const data = SEMANA_DATA[weekNum];
+  if(!data) return;
+
+  // Update label
+  sel.previousElementSibling && (sel.previousElementSibling.textContent = data.title);
+
+  // Calendar
+  const grid = document.getElementById('calendarGrid');
+  const days = ['HORÁRIO','SEG','TER','QUA','QUI','SEX','SÁB','DOM'];
+  
+  let html = '<div class="cal-header">';
+  days.forEach(d=>html+=`<div class="cal-day-label">${d}</div>`);
+  html += '</div>';
+
+  data.schedule.forEach(row=>{
+    html += '<div class="cal-row">';
+    html += `<div class="cal-block-label">${row[0]}</div>`;
+    for(let i=1;i<=7;i++){
+      const cell = row[i];
+      if(!cell){ html += '<div class="cal-cell rest"><div class="cal-cell-disc" style="opacity:.3">—</div></div>'; continue; }
+      html += `<div class="cal-cell ${cell.disc}" title="${cell.topic.replace(/\n/g,' ')}">
+        <div class="cal-cell-disc">${DISCIPLINES[cell.disc]?.name?.split(' ')[0]||cell.disc.toUpperCase()}</div>
+        <div class="cal-cell-topic">${cell.topic.split('\n').slice(0,3).join(' · ')}</div>
+        <div class="cal-cell-type">${cell.type}</div>
+      </div>`;
+    }
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+
+  // Stats
+  document.getElementById('semanaStats').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${Object.entries(data.stats).map(([k,v])=>`
+        <div style="background:var(--bg3);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:18px;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent)">${v}</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px">${k}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;background:var(--bg3);border-radius:6px;padding:8px">
+      FASE: ${data.phase}
+    </div>
+  `;
+
+  // Regras
+  document.getElementById('regrasTaticas').innerHTML = data.regras.map((r,i)=>`
+    <div style="display:flex;gap:8px;margin-bottom:8px;font-size:11px;line-height:1.5">
+      <span style="color:var(--accent);font-weight:700;flex-shrink:0">${i+1}.</span>
+      <span style="color:var(--text2)">${r}</span>
+    </div>
+  `).join('');
+
+  // Meta
+  document.getElementById('metaSemanal').innerHTML = `
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;border-left:3px solid var(--accent)">
+      <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">META DA SEMANA</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">${data.meta}</div>
+    </div>
+  `;
+}
+
+// ==================== MONTHS ====================
+function renderMonths(){
+  const grid = document.getElementById('monthGrid');
+  grid.innerHTML = MONTHS.map(m=>`
+    <div class="month-card">
+      <div class="month-num">${m.num}</div>
+      <div class="month-title" style="color:${m.color}">${m.title} — ${m.subtitle}</div>
+      <div class="month-phase">${m.phase||''}</div>
+      <div class="month-focus">
+        <div class="month-focus-title">Disciplinas Foco</div>
+        ${m.focus.map((f,i)=>`<span class="month-pill" style="background:rgba(255,255,255,.06);color:var(--${m.colors[i]})">${f}</span>`).join('')}
+      </div>
+      <div style="margin-bottom:10px">
+        <div class="month-focus-title">Distribuição de Horas</div>
+        ${Object.entries(m.hours).filter(([k,v])=>v>0).map(([k,v])=>`
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div style="font-size:10px;color:${DISCIPLINES[k]?.color};width:100px;font-family:'IBM Plex Mono',monospace">${DISCIPLINES[k]?.name?.substring(0,12)||k}</div>
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="background:${DISCIPLINES[k]?.color};width:${Math.round(v/Object.values(m.hours).reduce((a,b)=>a+b)*100)}%"></div></div>
+            <div style="font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;width:28px">${v}h</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="month-goal">${m.goal}</div>
+      ${m.alerta?`<div style="margin-top:8px;background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);border-radius:6px;padding:8px;font-size:11px;color:var(--red)">⚠ ${m.alerta}</div>`:''}
+    </div>
+  `).join('');
+}
+
+// ==================== STUDY LOG ====================
+function addLog(){
+  const disc = document.getElementById('logDisc').value;
+  const topic = document.getElementById('logTopic').value.trim();
+  const hours = document.getElementById('logHours').value;
+  const q = document.getElementById('logQ').value;
+  const perf = document.getElementById('logPerf').value;
+  const type = document.getElementById('logType').value;
+  const note = document.getElementById('logNote').value.trim();
+  const date = document.getElementById('logDate').value;
+
+  if(!topic||!hours||!date){ alert('Preencha data, tópico e horas.'); return; }
+
+  state.logs.push({id:Date.now(),date,disc,topic,hours:+hours,questions:+q||0,perf:perf!==''?+perf:null,type,note});
+  saveState();
+
+  document.getElementById('logTopic').value='';
+  document.getElementById('logHours').value='';
+  document.getElementById('logQ').value='';
+  document.getElementById('logPerf').value='';
+  document.getElementById('logNote').value='';
+
+  renderLogTable();
+  renderDashboard();
+  updateStreak();
+}
+
+function filterLog(disc, btn){
+  state.currentLogFilter = disc;
+  document.querySelectorAll('#logTabs .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderLogTable();
+}
+
+function renderLogTable(){
+  const body = document.getElementById('logBody');
+  let logs = [...state.logs].reverse();
+  if(state.currentLogFilter!=='all') logs = logs.filter(l=>l.disc===state.currentLogFilter);
+  
+  if(!logs.length){
+    body.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text3)">Nenhum registro${state.currentLogFilter!=='all'?' para esta disciplina':' ainda'}. Use o formulário acima.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = logs.map(l=>{
+    const d = DISCIPLINES[l.disc]||{name:l.disc,color:'var(--text2)'};
+    const perfClass = l.perf===null?'':l.perf>=70?'perf-high':l.perf>=55?'perf-mid':'perf-low';
+    return `<tr>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">${l.date}</td>
+      <td><span class="disc-badge" style="background:${d.color}22;color:${d.color}">${d.name}</span></td>
+      <td style="font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.topic}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:12px">${l.hours}h</td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:12px">${l.questions||'—'}</td>
+      <td>${l.perf!==null?`<div class="perf-badge ${perfClass}" style="width:auto;height:auto;padding:2px 8px;border-radius:4px">${l.perf}%</div>`:'<span style="color:var(--text3)">—</span>'}</td>
+      <td style="font-size:11px;color:var(--text2)">${l.type}</td>
+      <td style="font-size:11px;color:var(--text3);max-width:120px;overflow:hidden;text-overflow:ellipsis">${l.note||'—'}</td>
+      <td><button class="btn danger" style="padding:4px 8px;font-size:10px" onclick="deleteLog(${l.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteLog(id){
+  state.logs = state.logs.filter(l=>l.id!==id);
+  saveState();
+  renderLogTable();
+  renderDashboard();
+}
+
+function clearLogs(){
+  state.logs = [];
+  saveState();
+  renderLogTable();
+  renderDashboard();
+}
+
+// ==================== REVISIONS ====================
+const REV_INTERVALS = {
+  easy: [7,21,60,120],
+  med: [3,7,21,45,90],
+  hard: [1,3,7,14,30,60],
+};
+
+function addRevision(){
+  const topic = document.getElementById('revTopic').value.trim();
+  const disc = document.getElementById('revDisc').value;
+  const date = document.getElementById('revDate').value;
+  const diff = document.getElementById('revDiff').value;
+  if(!topic||!date){ alert('Preencha tópico e data.'); return; }
+
+  const intervals = REV_INTERVALS[diff];
+  const rev = {id:Date.now(), topic, disc, studyDate:date, diff, intervals, completedRevs:[], nextRevIdx:0};
+  state.revisions.push(rev);
+  saveState();
+
+  document.getElementById('revTopic').value='';
+  renderRevisions();
+  renderDashboard();
+}
+
+function getNextRevDate(rev){
+  if(rev.nextRevIdx >= rev.intervals.length) return null;
+  const base = new Date(rev.studyDate);
+  base.setDate(base.getDate() + rev.intervals[rev.nextRevIdx]);
+  return base.toISOString().split('T')[0];
+}
+
+function getRevisionsDue(){
+  const today = new Date().toISOString().split('T')[0];
+  return state.revisions
+    .filter(r=>r.nextRevIdx < r.intervals.length)
+    .map(r=>{
+      const nextDate = getNextRevDate(r);
+      const status = nextDate < today ? 'urgent' : nextDate === today ? 'due' : 'ok';
+      return {...r, nextDate, status, revNum: r.nextRevIdx};
+    })
+    .sort((a,b)=>a.nextDate.localeCompare(b.nextDate));
+}
+
+function filterRevs(filter, btn){
+  state.currentRevFilter = filter;
+  document.querySelectorAll('.view#view-revisao .tabs .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderRevisions();
+}
+
+function renderRevisions(){
+  const all = getRevisionsDue();
+  const urgent = all.filter(r=>r.status==='urgent').length;
+  const due = all.filter(r=>r.status==='due').length;
+
+  document.getElementById('revUrgent').textContent = urgent;
+  document.getElementById('revToday').textContent = due;
+  document.getElementById('revTotal').textContent = state.revisions.length;
+
+  let revs = all;
+  if(state.currentRevFilter==='urgent') revs = all.filter(r=>r.status==='urgent');
+  else if(state.currentRevFilter==='due') revs = all.filter(r=>r.status==='due');
+  else if(state.currentRevFilter==='ok') revs = all.filter(r=>r.status==='ok');
+
+  const list = document.getElementById('revList');
+  if(!revs.length){
+    list.innerHTML = '<div class="empty"><div class="empty-icon">✓</div><div class="empty-text">Nenhuma revisão nesta categoria</div></div>';
+    return;
+  }
+
+  list.innerHTML = revs.map(r=>`
+    <div class="rev-card ${r.status}">
+      <div class="rev-info">
+        <div class="rev-topic">${r.topic}</div>
+        <div class="rev-meta">${DISCIPLINES[r.disc]?.name||r.disc} · Revisão #${r.revNum+1}/${r.intervals.length} · Próxima: ${r.nextDate} · Estudo: ${r.studyDate}</div>
+        <div style="display:flex;gap:4px;margin-top:6px">
+          ${r.intervals.map((interval,i)=>`
+            <div style="width:24px;height:6px;border-radius:3px;background:${i<r.nextRevIdx?'var(--accent3)':i===r.nextRevIdx?'var(--accent)':'var(--bg3)'}"></div>
+          `).join('')}
+          <span style="font-size:9px;color:var(--text3);margin-left:4px;font-family:'IBM Plex Mono',monospace">+${r.intervals[r.nextRevIdx]}d</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <span class="rev-badge ${r.status}">${r.status==='urgent'?'VENCIDO':r.status==='due'?'HOJE':'EM DIA'}</span>
+        <button class="btn" style="font-size:10px;padding:4px 10px" onclick="markRevDone(${r.id})">✓ Feita</button>
+        <button class="btn ghost" style="font-size:10px;padding:4px 10px" onclick="deleteRev(${r.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function markRevDone(id){
+  const rev = state.revisions.find(r=>r.id===id);
+  if(!rev) return;
+  rev.completedRevs.push({revNum:rev.nextRevIdx, date:new Date().toISOString().split('T')[0]});
+  rev.nextRevIdx++;
+  saveState();
+  renderRevisions();
+  renderDashboard();
+}
+
+function deleteRev(id){
+  state.revisions = state.revisions.filter(r=>r.id!==id);
+  saveState();
+  renderRevisions();
+  renderDashboard();
+}
+
+// ==================== ERRORS ====================
+function addError(){
+  const trap = document.getElementById('errTrap').value.trim();
+  const disc = document.getElementById('errDisc').value;
+  const art = document.getElementById('errArt').value.trim();
+  const fix = document.getElementById('errFix').value.trim();
+  if(!trap){ alert('Descreva o mecanismo da armadilha.'); return; }
+
+  state.errors.push({id:Date.now(), trap, disc, art, fix, date:new Date().toISOString().split('T')[0]});
+  saveState();
+  document.getElementById('errTrap').value='';
+  document.getElementById('errArt').value='';
+  document.getElementById('errFix').value='';
+  renderErrors();
+}
+
+function renderErrors(){
+  const errList = document.getElementById('errList');
+  if(!state.errors.length){
+    errList.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><div class="empty-text">Nenhum erro catalogado ainda.<br>Registre erros para construir imunidade.</div></div>';
+  } else {
+    errList.innerHTML = [...state.errors].reverse().map(e=>`
+      <div class="err-item">
+        <div class="err-num">E</div>
+        <div style="flex:1">
+          <div class="err-text">${e.trap}</div>
+          ${e.art?`<div class="err-disc">📌 ${e.art}</div>`:''}
+          ${e.fix?`<div style="margin-top:4px;font-size:11px;color:var(--accent3)">✓ ${e.fix}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span class="disc-badge" style="background:${DISCIPLINES[e.disc]?.color}22;color:${DISCIPLINES[e.disc]?.color}">${DISCIPLINES[e.disc]?.name?.split(' ')[0]||e.disc}</span>
+          <span style="font-size:9px;color:var(--text3)">${e.date}</span>
+          <button class="btn ghost" style="font-size:10px;padding:3px 8px" onclick="deleteError(${e.id})">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Error patterns
+  const patterns = document.getElementById('errPatterns');
+  const discCount = {};
+  state.errors.forEach(e=>{ discCount[e.disc] = (discCount[e.disc]||0)+1; });
+  const sorted = Object.entries(discCount).sort((a,b)=>b[1]-a[1]);
+  if(!sorted.length){
+    patterns.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:10px">Nenhum padrão identificado ainda.</div>';
+  } else {
+    patterns.innerHTML = sorted.map(([disc,count])=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="color:${DISCIPLINES[disc]?.color};font-size:12px">${DISCIPLINES[disc]?.name||disc}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="progress-bar" style="width:80px"><div class="progress-fill" style="background:${DISCIPLINES[disc]?.color};width:${Math.min(100,count/Math.max(...Object.values(discCount))*100)}%"></div></div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--red)">${count}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function deleteError(id){
+  state.errors = state.errors.filter(e=>e.id!==id);
+  saveState();
+  renderErrors();
+}
+
+// ==================== NEURO ====================
+function renderNeuro(){
+  const blocks = [
+    {time:'6:00–8:00', label:'Pré-estudo', items:['Exercício leve 20min','Café sem tela','Revisão relâmpago 15min dos flashcards do dia anterior'], color:'var(--accent3)'},
+    {time:'8:00–10:00', label:'Bloco 1 — Teoria', items:['Conteúdo mais difícil do dia','Leitura ativa da lei/doutrina','Zero celular. Modo avião.'], color:'var(--icms)'},
+    {time:'10:15–12:00', label:'Bloco 2 — Questões', items:['30–40 questões da matéria do Bloco 1','Correção imediata (máx. 4h de distância)','Catalogar todos os erros'], color:'var(--trib)'},
+    {time:'13:30–15:30', label:'Bloco 3 — Expansão', items:['Segunda disciplina do dia','Jurisprudência ou complementar','Mapa mental ou síntese em 1 página'], color:'var(--cont)'},
+    {time:'16:00–17:30', label:'Bloco 4 — Revisão', items:['Revisão ativa do que foi visto na semana','Questões espaçadas (Revise o catálogo)','Planejamento do dia seguinte: 10min'], color:'var(--audit)'},
+  ];
+  document.getElementById('circadianGrid').innerHTML = blocks.map(b=>`
+    <div style="background:var(--bg3);border-radius:10px;padding:14px;border-top:2px solid ${b.color}">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:${b.color};margin-bottom:4px">${b.time}</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;margin-bottom:8px">${b.label}</div>
+      ${b.items.map(item=>`<div style="font-size:11px;color:var(--text2);margin-bottom:4px;display:flex;gap:6px"><span style="color:${b.color}">›</span>${item}</div>`).join('')}
+    </div>
+  `).join('');
+}
+
+// ==================== NAVIGATION ====================
+function showView(viewId){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+viewId).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if(viewId==='dashboard') renderDashboard();
+  else if(viewId==='registro') renderLogTable();
+  else if(viewId==='revisao') renderRevisions();
+  else if(viewId==='erros') renderErrors();
+  else if(viewId==='semanal') renderSemana();
+}
+
+function openModal(title, content){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = content;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ==================== BOOT ====================
+init();
+</script>
+</body>
+</html>
